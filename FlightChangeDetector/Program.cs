@@ -1,4 +1,5 @@
 ﻿using FlightChangeDetector.Domain;
+using FlightChangeDetector.Extensions;
 using FlightChangeDetector.Helpers;
 using FlightChangeDetector.Models;
 using FlightChangeDetector.Services;
@@ -31,18 +32,27 @@ if (!CommandLineHelper.TryParseArguments(args, out DateTime startDate, out DateT
     return;
 }
 
+EnsureSeedData(host);
+
+
 Console.WriteLine($"Processing flight schedule from {startDate:yyyy-MM-dd} to {endDate:yyyy-MM-dd} for agency ID: {agencyId}");
 
 var flightChangeDetectorService = host.Services.GetRequiredService<IFlightChangeDetectorService>();
 
 TimingHelper.ExecuteWithTiming(() =>
 {
-    List<FlightChangeResult> results = flightChangeDetectorService.DetectFlightChangesAsync(startDate, endDate, agencyId).Result;
-    CsvUtil.WriteResultsToCsv(results, "results.csv");
-    Console.WriteLine($"Processing finished. {results.Count} flights found");
+    try
+    {
+        List<FlightChangeResult> results = flightChangeDetectorService.DetectFlightChangesAsync(startDate, endDate, agencyId).Result;
+        CsvUtil.WriteResultsToCsv(results, "results.csv");
+        Console.WriteLine($"Processing finished. {results.Count} flights found");
+    }
+    catch (Exception e)
+    {
+        Console.WriteLine(e.GetCompleteMessage());
+    }
 });
 
-EnsureSeedData(host);
 
 static void EnsureSeedData(IHost host)
 {
