@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FlightChangeDetector.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,6 @@ namespace FlightChangeDetector.Services
 {
     public interface IFlightChangeDetectorService
     {
+        Task<List<FlightChangeResult>> DetectFlightChangesAsync(DateTime startDate, DateTime endDate, int agencyId, CancellationToken ct = default);
     }
 }

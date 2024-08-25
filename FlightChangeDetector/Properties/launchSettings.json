@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "FlightChangeDetector": {
+      "commandName": "Project",
+      "commandLineArgs": "2016-01-01 2017-01-31 1"
+    }
+  }
+}
