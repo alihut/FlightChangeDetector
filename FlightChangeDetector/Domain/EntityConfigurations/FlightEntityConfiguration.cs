@@ -35,7 +35,6 @@ namespace FlightChangeDetector.Domain.EntityConfigurations
                 .HasOne(p => p.Route)
                 .WithMany(c => c.Flights)
                 .HasForeignKey(c => c.RouteId);
-
         }
     }
 }

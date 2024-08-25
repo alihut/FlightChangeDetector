@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FlightChangeDetector.Domain.Entities;
+﻿using FlightChangeDetector.Domain.Entities;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FlightChangeDetector.Domain.EntityConfigurations

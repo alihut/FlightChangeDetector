@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FlightChangeDetector.Domain.Entities
+﻿namespace FlightChangeDetector.Domain.Entities
 {
     public class Flight : BaseEntity
     {
