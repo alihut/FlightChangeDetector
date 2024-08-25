@@ -14,19 +14,15 @@ var configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .Build();
 
-// Fetch the connection string
 string connectionString = configuration.GetConnectionString("DefaultConnection");
 
 var host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((context, services) =>
     {
-        // Register the DbContext with a connection string
         services.AddDbContext<MainDbContext>(options =>
             options.UseSqlServer(connectionString));
 
         services.AddScoped<IFlightChangeDetectorService, FlightChangeDetectorService>();
-
-        // Register other services here if needed
     })
     .Build();
 
@@ -35,7 +31,6 @@ if (!CommandLineHelper.TryParseArguments(args, out DateTime startDate, out DateT
     return;
 }
 
-// Proceed with your business logic here
 Console.WriteLine($"Processing flight schedule from {startDate:yyyy-MM-dd} to {endDate:yyyy-MM-dd} for agency ID: {agencyId}");
 
 var flightChangeDetectorService = host.Services.GetRequiredService<IFlightChangeDetectorService>();
@@ -45,7 +40,6 @@ TimingHelper.ExecuteWithTiming(() =>
     List<FlightChangeResult> results = flightChangeDetectorService.DetectFlightChangesAsync(startDate, endDate, agencyId).Result;
     CsvUtil.WriteResultsToCsv(results, "results.csv");
     Console.WriteLine($"Processing finished. {results.Count} flights found");
-
 });
 
 EnsureSeedData(host);
