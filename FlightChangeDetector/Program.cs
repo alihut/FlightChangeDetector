@@ -34,16 +34,16 @@ if (!CommandLineHelper.TryParseArguments(args, out DateTime startDate, out DateT
 
 EnsureSeedData(host);
 
-
 Console.WriteLine($"Processing flight schedule from {startDate:yyyy-MM-dd} to {endDate:yyyy-MM-dd} for agency ID: {agencyId}");
 
 var flightChangeDetectorService = host.Services.GetRequiredService<IFlightChangeDetectorService>();
 
-TimingHelper.ExecuteWithTiming(() =>
+await TimingHelper.ExecuteWithTimingAsync(async () =>
 {
     try
     {
-        List<FlightChangeResult> results = flightChangeDetectorService.DetectFlightChangesAsync(startDate, endDate, agencyId).Result;
+        List<FlightChangeResult> results =
+            await flightChangeDetectorService.DetectFlightChangesAsync(startDate, endDate, agencyId);
         CsvUtil.WriteResultsToCsv(results, "results.csv");
         Console.WriteLine($"Processing finished. {results.Count} flights found");
     }
@@ -59,15 +59,8 @@ static void EnsureSeedData(IHost host)
     using (var scope = host.Services.CreateScope())
     {
         var services = scope.ServiceProvider;
-        try
-        {
-            var context = services.GetRequiredService<MainDbContext>();
+        var context = services.GetRequiredService<MainDbContext>();
 
-            DataSeeder.SeedData(context);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
+        DataSeeder.SeedData(context);
     }
 }

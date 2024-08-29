@@ -11,6 +11,14 @@ namespace FlightChangeDetector.Helpers
             sw.Stop();
             Console.WriteLine($"Processing finished in {sw.ElapsedMilliseconds} ms");
         }
+
+        public static async Task ExecuteWithTimingAsync(Func<Task> action)
+        {
+            var sw = Stopwatch.StartNew();
+            await action();
+            sw.Stop();
+            Console.WriteLine($"Processing finished in {sw.ElapsedMilliseconds} ms");
+        }
     }
 
 }
